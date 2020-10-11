@@ -15,7 +15,60 @@ composer require danutavadanei/php-scim-query
 ## Usage
 
 ``` php
----
+$builder = new \DanutAvadanei\PhpScimQuery\Builder;
+
+$builder->whereEqual('userName', 'Danut');
+
+$builder->whereNotEqual('userName', 'Danut');
+
+$builder->whereContains('userName', 'Dan');
+
+$builder->whereNotContains('userName', 'Dan');
+
+$builder->whereStartsWith('userName', 'Dan');
+
+$builder->whereNotStartsWith('userName', 'Dan');
+
+$builder->whereEndsWith('userName', 'Dan');
+
+$builder->whereNotEndsWith('userName', 'Dan');
+
+$builder->wherePresent('title');
+
+$builder->whereNotPresent('title');
+
+$builder->whereGreaterThan('lastModified', '2020-01-01T00:00:00Z');
+
+$builder->whereNotGreaterThan('lastModified', '2020-01-01T00:00:00Z');
+
+$builder->whereGreaterThanOrEqualTo('lastModified', '2020-01-01T00:00:00Z');
+
+$builder->whereNotGreaterThanOrEqualTo('lastModified', '2020-01-01T00:00:00Z');
+
+$builder->whereLessThan('lastModified', '2020-01-01T00:00:00Z');
+
+$builder->whereNotLessThan('lastModified', '2020-01-01T00:00:00Z');
+
+$builder->whereLessThanOrEqualTo('lastModified', '2020-01-01T00:00:00Z');
+
+$builder->whereNotLessThanOrEqualTo('lastModified', '2020-01-01T00:00:00Z');
+
+$builder->whereComplex('emails', function ($builder) {
+    $builder->whereEquals('work')
+        ->whereContains('@example.com');
+});
+
+$builder->whereNotComplex('emails', function (Builder $builder) {
+    $builder->whereEquals('work')
+        ->whereContains('@example.com');
+});
+
+$builder
+    ->where(function (Builder $builder) {
+        $builder->whereEquals('employeeType', 'executive')
+            ->whereEndsWith('email', '@example.com');
+    })
+    ->orWhereEquals('employeeType', 'diretor');
 ```
 
 ## Testing

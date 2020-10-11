@@ -15,7 +15,8 @@
         }
     ],
     "require": {
-        "php": "^7.4"
+        "php": "^7.4",
+        "illuminate/support": "^8.9"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.16",
@@ -24,12 +25,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Danutavadanei\\PhpScimQuery\\": "src"
+            "DanutAvadanei\\ScimQuery\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Danutavadanei\\PhpScimQuery\\Tests\\": "tests"
+            "DanutAvadanei\\ScimQuery\\Tests\\": "tests"
         }
     },
     "scripts": {
