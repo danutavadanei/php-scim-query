@@ -1,18 +1,17 @@
 {
-    "name": ":vendor_name/:package_name",
-    "description": ":package_description",
+    "name": "danutavadanei/php-scim-query",
+    "description": "A simple an elegant way of creating SCIM 2.0 compatible queries using PHP",
     "keywords": [
-        ":vendor_name",
-        ":package_name"
+        "danutavadanei",
+        "php-scim-query"
     ],
-    "homepage": "https://github.com/:vendor_name/:package_name",
+    "homepage": "https://github.com/danutavadanei/php-scim-query",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": ":author_email",
-            "homepage": "https://spatie.be",
-            "role": "Developer"
+            "name": "Danut Avadanei",
+            "email": "danut@ziende.com",
+            "homepage": "https://ziende.com"
         }
     ],
     "require": {
@@ -25,19 +24,20 @@
     },
     "autoload": {
         "psr-4": {
-            "Spatie\\Skeleton\\": "src"
+            "Danutavadanei\\PhpScimQuery\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Spatie\\Skeleton\\Tests\\": "tests"
+            "Danutavadanei\\PhpScimQuery\\Tests\\": "tests"
         }
     },
     "scripts": {
         "psalm": "vendor/bin/psalm",
         "test": "vendor/bin/phpunit",
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
-        "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes"
+        "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes",
+        "php-cs-fixer": "vendor/bin/php-cs-fixer"
     },
     "config": {
         "sort-packages": true

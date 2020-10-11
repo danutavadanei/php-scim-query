@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Skeleton\Tests;
+namespace Danutavadanei\PhpScimQuery\Tests;
 
 use PHPUnit\Framework\TestCase;
 
