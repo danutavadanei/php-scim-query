@@ -11,37 +11,37 @@ class BuilderTest extends TestCase
     public function testWhereEquals()
     {
         $builder = $this->getBuilder();
-        $builder->whereEquals('name', 'Dan');
-        $this->assertSame('name eq "Dan"', $builder->toScim());
+        $builder->whereEquals('name', 'John');
+        $this->assertSame('name eq "John"', $builder->toScim());
 
         $builder = $this->getBuilder();
-        $builder->whereEquals('name', 'Dan')->whereEquals('name', 'Joe');
-        $this->assertSame('name eq "Dan" and name eq "Joe"', $builder->toScim());
+        $builder->whereEquals('name', 'John')->whereEquals('name', 'Jane');
+        $this->assertSame('name eq "John" and name eq "Jane"', $builder->toScim());
     }
 
     public function testWhereNotEquals()
     {
         $builder = $this->getBuilder();
-        $builder->whereNotEquals('name', 'Dan');
-        $this->assertSame('not (name eq "Dan")', $builder->toScim());
+        $builder->whereNotEquals('name', 'John');
+        $this->assertSame('not (name eq "John")', $builder->toScim());
 
         $builder = $this->getBuilder();
-        $builder->whereNotEquals('name', 'Dan')->whereNotEquals('name', 'Joe');
-        $this->assertSame('not (name eq "Dan") and not (name eq "Joe")', $builder->toScim());
+        $builder->whereNotEquals('name', 'John')->whereNotEquals('name', 'Jane');
+        $this->assertSame('not (name eq "John") and not (name eq "Jane")', $builder->toScim());
     }
 
     public function testOrWhereEquals()
     {
         $builder = $this->getBuilder();
-        $builder->whereEquals('name', 'Dan')->orWhereEquals('name', 'Joe');
-        $this->assertSame('name eq "Dan" or name eq "Joe"', $builder->toScim());
+        $builder->whereEquals('name', 'John')->orWhereEquals('name', 'Jane');
+        $this->assertSame('name eq "John" or name eq "Jane"', $builder->toScim());
     }
 
     public function testOrWhereNotEquals()
     {
         $builder = $this->getBuilder();
-        $builder->whereNotEquals('name', 'Dan')->orWhereNotEquals('name', 'Joe');
-        $this->assertSame('not (name eq "Dan") or not (name eq "Joe")', $builder->toScim());
+        $builder->whereNotEquals('name', 'John')->orWhereNotEquals('name', 'Jane');
+        $this->assertSame('not (name eq "John") or not (name eq "Jane")', $builder->toScim());
     }
 
     public function testWherePresent()
@@ -54,7 +54,7 @@ class BuilderTest extends TestCase
         $builder->wherePresent(['type', 'activity']);
         $this->assertSame('type pr and activity pr', $builder->toScim());
     }
-
+    
     public function testWhereNotPresent()
     {
         $builder = $this->getBuilder();
