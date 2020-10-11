@@ -135,7 +135,7 @@ class Builder
      */
     public function wherePresent($attributes, string $logical = 'and', bool $not = false)
     {
-        $type = 'Basic';
+        $type = 'Present';
 
         foreach (Arr::wrap($attributes) as $attribute) {
             $this->wheres[] = compact('type', 'attribute', 'logical', 'not');
@@ -154,6 +154,29 @@ class Builder
     public function orWherePresent($attributes, bool $not = false)
     {
         return $this->wherePresent($attributes, 'or', $not);
+    }
+
+    /**
+     * Add a "not where present" clause to the query.
+     *
+     * @param string|array $attributes
+     * @param string $logical
+     * @return $this
+     */
+    public function whereNotPresent($attributes, string $logical = 'and')
+    {
+        return $this->wherePresent($attributes, $logical, true);
+    }
+
+    /**
+     * Add a "or where not present" clause to the query.
+     *
+     * @param string|array $attributes
+     * @return $this
+     */
+    public function orWhereNotPresent($attributes)
+    {
+        return $this->orWherePresent($attributes, true);
     }
 
     public function whereNested(Closure $attribute, string $boolean)

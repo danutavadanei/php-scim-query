@@ -78,16 +78,31 @@ class Grammar
      */
     protected function whereBasic(Builder $query, array $where): string
     {
-        $prefix = $where['not'] ? 'not (' : '';
-        $suffix = $where['not'] ? ')' : '';
-
         $attribute = $this->wrap($where['attribute']);
 
         $value = $this->wrapValue($where['value']);
 
         $operator = $where['operator'];
 
-        return $prefix . $attribute.' '.$operator.' '.$value . $suffix;
+        return $this->wrapExpression(
+            $attribute.' '.$operator.' '.$value,
+            $where['not']
+        );
+    }
+
+    /**
+     * Compile a present where clause.
+     *
+     * @param  \DanutAvadanei\ScimQuery\Builder  $query
+     * @param  array  $where
+     * @return string
+     */
+    protected function wherePresent(Builder $query, array $where): string
+    {
+        return $this->wrapExpression(
+            $this->wrap($where['attribute']).' pr',
+            $where['not']
+        );
     }
 
     /**
@@ -147,5 +162,14 @@ class Grammar
     protected function removeLeadingLogical(string $value): string
     {
         return preg_replace('/and |or /i', '', $value, 1);
+    }
+
+    private function wrapExpression(string $string, bool $shouldWrap): string
+    {
+        if (! $shouldWrap) {
+            return $string;
+        }
+
+        return 'not ('.$string.')';
     }
 }
