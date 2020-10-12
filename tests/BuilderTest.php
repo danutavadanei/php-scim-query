@@ -54,7 +54,7 @@ class BuilderTest extends TestCase
         $builder->wherePresent(['type', 'activity']);
         $this->assertSame('type pr and activity pr', $builder->toScim());
     }
-    
+
     public function testWhereNotPresent()
     {
         $builder = $this->getBuilder();

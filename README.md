@@ -97,3 +97,12 @@ Please review [our security policy](../../security/policy) on how to report secu
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+
+## Resources
+
+https://github.com/illuminate/database/blob/master/Query/Builder.php
+https://tools.ietf.org/html/rfc7644
+https://ldapwiki.com/wiki/SCIM%20Filtering
+https://github.com/hiyosi/filter
+https://github.com/pingidentity/scim2
+https://apidocs.pingidentity.com/pingdatagovernance/scim/v2/api/guide/
