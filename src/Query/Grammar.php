@@ -78,7 +78,7 @@ class Grammar
      */
     protected function whereBasic(Builder $query, array $where): string
     {
-        $attribute = $this->wrap($where['attribute']);
+        $attribute = $where['attribute'];
 
         $value = $this->wrapValue($where['value']);
 
@@ -120,7 +120,7 @@ class Grammar
     protected function wherePresent(Builder $query, array $where): string
     {
         return $this->wrapExpression(
-            $this->wrap($where['attribute']).' pr',
+            $where['attribute'].' pr',
             $where['not']
         );
     }
@@ -142,21 +142,6 @@ class Grammar
     }
 
     /**
-     * Wrap a value in keyword identifiers.
-     *
-     * @param  \DanutAvadanei\Scim2\Query\Expression|string  $value
-     * @return string
-     */
-    public function wrap($value): string
-    {
-        if ($this->isExpression($value)) {
-            return $this->getValue($value);
-        }
-
-        return $value;
-    }
-
-    /**
      * Wrap a single string in keyword identifiers.
      *
      * @param  mixed $value
@@ -169,28 +154,6 @@ class Grammar
         }
 
         return '"'.str_replace('"', '\"', $value).'"';
-    }
-
-    /**
-     * Determine if the given value is a raw expression.
-     *
-     * @param  mixed  $value
-     * @return bool
-     */
-    public function isExpression($value): bool
-    {
-        return $value instanceof Expression;
-    }
-
-    /**
-     * Get the value of a raw expression.
-     *
-     * @param  \DanutAvadanei\Scim2\Query\Expression  $expression
-     * @return string
-     */
-    public function getValue(Expression $expression): string
-    {
-        return $expression->getValue();
     }
 
     /**

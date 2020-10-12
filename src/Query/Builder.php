@@ -661,6 +661,31 @@ class Builder
         return $this->orWherePresent($attributes, true);
     }
 
+    /**
+     * Add a raw where clause to the query.
+     *
+     * @param string $scim
+     * @param string $logical
+     * @return \DanutAvadanei\Scim2\Query\Builder
+     */
+    public function whereRaw(string $scim, string $logical = 'and')
+    {
+        $this->wheres[] = ['type' => 'raw', 'scim' => $scim, 'logical' => $logical];
+
+        return $this;
+    }
+
+    /**
+     * Add a raw "or where" clause to the query.
+     *
+     * @param string $scim
+     * @return \DanutAvadanei\Scim2\Query\Builder
+     */
+    public function orWhereRaw(string $scim)
+    {
+        return $this->whereRaw($scim, 'or');
+    }
+
     public function whereComplex($attribute, $operator, Closure $value, string $boolean)
     {
         return $this;

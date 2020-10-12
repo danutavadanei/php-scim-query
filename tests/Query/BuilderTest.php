@@ -498,8 +498,22 @@ class BuilderTest extends TestCase
         $this->assertSame('active eq true or not (name eq "Joe" and name eq "Jane")', $builder->toScim());
     }
 
+    public function testWhereRaw()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereRaw('name eq "Joe"');
+        $this->assertSame('name eq "Joe"', $builder->toScim());
+    }
+
+    public function testOrWhereRaw()
+    {
+        $builder = $this->getBuilder();
+        $builder->wherePresent('title')->orWhereRaw('name eq "Joe"');
+        $this->assertSame('title pr or name eq "Joe"', $builder->toScim());
+    }
+
     /**
-     * @return \DanutAvadanei\ScimQuery\Builder
+     * @return \DanutAvadanei\Scim2\Query\Builder
      */
     protected function getBuilder(): Builder
     {
