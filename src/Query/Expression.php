@@ -1,6 +1,6 @@
 <?php
 
-namespace DanutAvadanei\ScimQuery;
+namespace DanutAvadanei\Scim2\Query;
 
 class Expression
 {

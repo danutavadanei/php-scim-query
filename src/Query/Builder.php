@@ -1,6 +1,6 @@
 <?php
 
-namespace DanutAvadanei\ScimQuery;
+namespace DanutAvadanei\Scim2\Query;
 
 use Closure;
 use Illuminate\Support\Arr;
@@ -732,7 +732,7 @@ class Builder
      * @param \Closure $callback
      * @param string $boolean
      * @param bool $not
-     * @return \DanutAvadanei\ScimQuery\Builder
+     * @return \DanutAvadanei\Scim2\Query\Builder
      */
     public function whereNested(Closure $callback, string $boolean = 'and', bool $not = false)
     {
@@ -746,7 +746,7 @@ class Builder
      *
      * @param \Closure $callback
      * @param bool $not
-     * @return \DanutAvadanei\ScimQuery\Builder
+     * @return \DanutAvadanei\Scim2\Query\Builder
      */
     public function orWhereNested(Closure $callback, bool $not = false)
     {
@@ -758,7 +758,7 @@ class Builder
      *
      * @param \Closure $callback
      * @param string $logical
-     * @return \DanutAvadanei\ScimQuery\Builder
+     * @return \DanutAvadanei\Scim2\Query\Builder
      */
     public function whereNotNested(Closure $callback, string $logical = 'and')
     {
@@ -769,7 +769,7 @@ class Builder
      * Add a nested "or where" statement to the query.
      *
      * @param \Closure $callback
-     * @return \DanutAvadanei\ScimQuery\Builder
+     * @return \DanutAvadanei\Scim2\Query\Builder
      */
     public function orWhereNotNested(Closure $callback)
     {
@@ -779,7 +779,7 @@ class Builder
     /**
      * Create a new query instance for nested where condition.
      *
-     * @return \DanutAvadanei\ScimQuery\Builder
+     * @return \DanutAvadanei\Scim2\Query\Builder
      */
     public function forNestedWhere()
     {
@@ -788,7 +788,7 @@ class Builder
 
     /**
      *
-     * @return \DanutAvadanei\ScimQuery\Builder
+     * @return \DanutAvadanei\Scim2\Query\Builder
      */
     public function newQuery()
     {
@@ -798,7 +798,7 @@ class Builder
     /**
      * Add another query builder as a nested where to the query builder.
      *
-     * @param \DanutAvadanei\ScimQuery\Builder $query
+     * @param \DanutAvadanei\Scim2\Query\Builder $query
      * @param string $logical
      * @param bool $not
      * @return $this

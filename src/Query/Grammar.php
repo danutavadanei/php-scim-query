@@ -1,6 +1,6 @@
 <?php
 
-namespace DanutAvadanei\ScimQuery;
+namespace DanutAvadanei\Scim2\Query;
 
 use Illuminate\Support\Traits\Macroable;
 
@@ -11,7 +11,7 @@ class Grammar
     /**
      * Compile the "where" portions of the query.
      *
-     * @param  \DanutAvadanei\ScimQuery\Builder $query
+     * @param  \DanutAvadanei\Scim2\Query\Builder $query
      * @return string
      */
     public function compileWheres(Builder $query): string
@@ -36,7 +36,7 @@ class Grammar
     /**
      * Get an array of all the where clauses for the query.
      *
-     * @param  \DanutAvadanei\ScimQuery\Builder $query
+     * @param  \DanutAvadanei\Scim2\Query\Builder $query
      * @return array
      */
     protected function compileWheresToArray(Builder $query): array
@@ -60,7 +60,7 @@ class Grammar
     /**
      * Compile a raw where clause.
      *
-     * @param  \DanutAvadanei\ScimQuery\Builder  $query
+     * @param  \DanutAvadanei\Scim2\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -72,7 +72,7 @@ class Grammar
     /**
      * Compile a basic where clause.
      *
-     * @param  \DanutAvadanei\ScimQuery\Builder  $query
+     * @param  \DanutAvadanei\Scim2\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -93,7 +93,7 @@ class Grammar
     /**
      * Compile a present where clause.
      *
-     * @param  \DanutAvadanei\ScimQuery\Builder  $query
+     * @param  \DanutAvadanei\Scim2\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -113,7 +113,7 @@ class Grammar
     /**
      * Compile a present where clause.
      *
-     * @param  \DanutAvadanei\ScimQuery\Builder  $query
+     * @param  \DanutAvadanei\Scim2\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -128,7 +128,7 @@ class Grammar
     /**
      * Compile a nested where clause.
      *
-     * @param  \DanutAvadanei\ScimQuery\Builder $query
+     * @param  \DanutAvadanei\Scim2\Query\Builder $query
      * @param  array  $where
      * @return string
      */
@@ -144,7 +144,7 @@ class Grammar
     /**
      * Wrap a value in keyword identifiers.
      *
-     * @param  \DanutAvadanei\ScimQuery\Expression|string  $value
+     * @param  \DanutAvadanei\Scim2\Query\Expression|string  $value
      * @return string
      */
     public function wrap($value): string
@@ -185,7 +185,7 @@ class Grammar
     /**
      * Get the value of a raw expression.
      *
-     * @param  \DanutAvadanei\ScimQuery\Expression  $expression
+     * @param  \DanutAvadanei\Scim2\Query\Expression  $expression
      * @return string
      */
     public function getValue(Expression $expression): string

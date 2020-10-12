@@ -25,12 +25,12 @@
     },
     "autoload": {
         "psr-4": {
-            "DanutAvadanei\\ScimQuery\\": "src"
+            "DanutAvadanei\\Scim2\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "DanutAvadanei\\ScimQuery\\Tests\\": "tests"
+            "DanutAvadanei\\Scim2\\Tests\\": "tests"
         }
     },
     "scripts": {

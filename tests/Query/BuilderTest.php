@@ -1,9 +1,9 @@
 <?php
 
-namespace DanutAvadanei\ScimQuery\Tests;
+namespace DanutAvadanei\Scim2\Tests\Query;
 
-use DanutAvadanei\ScimQuery\Builder;
-use DanutAvadanei\ScimQuery\Grammar;
+use DanutAvadanei\Scim2\Query\Builder;
+use DanutAvadanei\Scim2\Query\Grammar;
 use PHPUnit\Framework\TestCase;
 
 class BuilderTest extends TestCase
