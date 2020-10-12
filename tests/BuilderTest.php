@@ -88,6 +88,42 @@ class BuilderTest extends TestCase
         $this->assertSame('not (name co "John") or not (name co "Jane")', $builder->toScim());
     }
 
+    public function testWhereStartsWith()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereStartsWith('name', 'John');
+        $this->assertSame('name sw "John"', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder->whereStartsWith('name', 'John')->whereStartsWith('name', 'Jane');
+        $this->assertSame('name sw "John" and name sw "Jane"', $builder->toScim());
+    }
+
+    public function testWhereNotStartsWith()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereNotStartsWith('name', 'John');
+        $this->assertSame('not (name sw "John")', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder->whereNotStartsWith('name', 'John')->whereNotStartsWith('name', 'Jane');
+        $this->assertSame('not (name sw "John") and not (name sw "Jane")', $builder->toScim());
+    }
+
+    public function testOrWhereStartsWith()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereStartsWith('name', 'John')->orWhereStartsWith('name', 'Jane');
+        $this->assertSame('name sw "John" or name sw "Jane"', $builder->toScim());
+    }
+
+    public function testOrWhereNotStartsWith()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereNotStartsWith('name', 'John')->orWhereNotStartsWith('name', 'Jane');
+        $this->assertSame('not (name sw "John") or not (name sw "Jane")', $builder->toScim());
+    }
+
     public function testWherePresent()
     {
         $builder = $this->getBuilder();
