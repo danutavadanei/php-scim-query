@@ -232,6 +232,78 @@ class BuilderTest extends TestCase
         $this->assertSame('not (name ge "John") or not (name ge "Jane")', $builder->toScim());
     }
 
+    public function testWhereLessThen()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereLessThen('name', 'John');
+        $this->assertSame('name lt "John"', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder->whereLessThen('name', 'John')->whereLessThen('name', 'Jane');
+        $this->assertSame('name lt "John" and name lt "Jane"', $builder->toScim());
+    }
+
+    public function testWhereNotLessThen()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereNotLessThen('name', 'John');
+        $this->assertSame('not (name lt "John")', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder->whereNotLessThen('name', 'John')->whereNotLessThen('name', 'Jane');
+        $this->assertSame('not (name lt "John") and not (name lt "Jane")', $builder->toScim());
+    }
+
+    public function testOrWhereLessThen()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereLessThen('name', 'John')->orWhereLessThen('name', 'Jane');
+        $this->assertSame('name lt "John" or name lt "Jane"', $builder->toScim());
+    }
+
+    public function testOrWhereNotLessThen()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereNotLessThen('name', 'John')->orWhereNotLessThen('name', 'Jane');
+        $this->assertSame('not (name lt "John") or not (name lt "Jane")', $builder->toScim());
+    }
+
+    public function testWhereLessThenOrEqualTo()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereLessThenOrEqualTo('name', 'John');
+        $this->assertSame('name le "John"', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder->whereLessThenOrEqualTo('name', 'John')->whereLessThenOrEqualTo('name', 'Jane');
+        $this->assertSame('name le "John" and name le "Jane"', $builder->toScim());
+    }
+
+    public function testWhereNotLessThenOrEqualTo()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereNotLessThenOrEqualTo('name', 'John');
+        $this->assertSame('not (name le "John")', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder->whereNotLessThenOrEqualTo('name', 'John')->whereNotLessThenOrEqualTo('name', 'Jane');
+        $this->assertSame('not (name le "John") and not (name le "Jane")', $builder->toScim());
+    }
+
+    public function testOrWhereLessThenOrEqualTo()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereLessThenOrEqualTo('name', 'John')->orWhereLessThenOrEqualTo('name', 'Jane');
+        $this->assertSame('name le "John" or name le "Jane"', $builder->toScim());
+    }
+
+    public function testOrWhereNotLessThenOrEqualTo()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereNotLessThenOrEqualTo('name', 'John')->orWhereNotLessThenOrEqualTo('name', 'Jane');
+        $this->assertSame('not (name le "John") or not (name le "Jane")', $builder->toScim());
+    }
+
     public function testWherePresent()
     {
         $builder = $this->getBuilder();

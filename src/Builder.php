@@ -383,6 +383,110 @@ class Builder
     }
 
     /**
+     * Add a "where less than" clause to the query.
+     *
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param string $logical
+     * @param bool $not
+     * @return $this
+     */
+    public function whereLessThen($attribute, $value, string $logical = 'and', bool $not = false)
+    {
+        return $this->where($attribute, 'lt', $value, $logical, $not);
+    }
+
+    /**
+     * Add a "or where less than" clause to the query.
+     *
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param bool $not
+     * @return $this
+     */
+    public function orWhereLessThen($attribute, $value, bool $not = false)
+    {
+        return $this->whereLessThen($attribute, $value, 'or', $not);
+    }
+
+    /**
+     * Add a "where not less than" clause to the query.
+     *
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param string $logical
+     * @return $this
+     */
+    public function whereNotLessThen($attribute, $value, string $logical = 'and')
+    {
+        return $this->where($attribute, 'lt', $value, $logical, true);
+    }
+
+    /**
+     * Add a "or where not less than" clause to the query.
+     *
+     * @param mixed $attribute
+     * @param mixed $value
+     * @return $this
+     */
+    public function orWhereNotLessThen($attribute, $value)
+    {
+        return $this->whereNotLessThen($attribute, $value, 'or');
+    }
+
+    /**
+     * Add a "where less than or equal to" clause to the query.
+     *
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param string $logical
+     * @param bool $not
+     * @return $this
+     */
+    public function whereLessThenOrEqualTo($attribute, $value, string $logical = 'and', bool $not = false)
+    {
+        return $this->where($attribute, 'le', $value, $logical, $not);
+    }
+
+    /**
+     * Add a "or where less than or equal to" clause to the query.
+     *
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param bool $not
+     * @return $this
+     */
+    public function orWhereLessThenOrEqualTo($attribute, $value, bool $not = false)
+    {
+        return $this->whereLessThenOrEqualTo($attribute, $value, 'or', $not);
+    }
+
+    /**
+     * Add a "where not less than or equal to" clause to the query.
+     *
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param string $logical
+     * @return $this
+     */
+    public function whereNotLessThenOrEqualTo($attribute, $value, string $logical = 'and')
+    {
+        return $this->where($attribute, 'le', $value, $logical, true);
+    }
+
+    /**
+     * Add a "or where not less than or equal to" clause to the query.
+     *
+     * @param mixed $attribute
+     * @param mixed $value
+     * @return $this
+     */
+    public function orWhereNotLessThenOrEqualTo($attribute, $value)
+    {
+        return $this->whereNotLessThenOrEqualTo($attribute, $value, 'or');
+    }
+
+    /**
      * Add a "where in" clause to the query.
      *
      * @param string $attribute
