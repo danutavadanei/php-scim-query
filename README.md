@@ -110,3 +110,7 @@ https://ldapwiki.com/wiki/SCIM%20Filtering
 https://github.com/hiyosi/filter
 https://github.com/pingidentity/scim2
 https://apidocs.pingidentity.com/pingdatagovernance/scim/v2/api/guide/
+
+## To-do
+
+- add scim client abstraction and interface
