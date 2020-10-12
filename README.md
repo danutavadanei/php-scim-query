@@ -33,10 +33,6 @@ $builder->whereEndsWith('userName', 'Dan');
 
 $builder->whereNotEndsWith('userName', 'Dan');
 
-$builder->wherePresent('title');
-
-$builder->whereNotPresent('title');
-
 $builder->whereGreaterThan('lastModified', '2020-01-01T00:00:00Z');
 
 $builder->whereNotGreaterThan('lastModified', '2020-01-01T00:00:00Z');
@@ -52,6 +48,14 @@ $builder->whereNotLessThan('lastModified', '2020-01-01T00:00:00Z');
 $builder->whereLessThanOrEqualTo('lastModified', '2020-01-01T00:00:00Z');
 
 $builder->whereNotLessThanOrEqualTo('lastModified', '2020-01-01T00:00:00Z');
+
+$builder->wherePresent('title');
+
+$builder->whereNotPresent('title');
+
+$builder->whereIn('title', ['Mr.', 'Ms.']);
+
+$builder->whereNotIn('title', ['Mr.', 'Ms.']);
 
 $builder->whereComplex('emails', function ($builder) {
     $builder->whereEquals('work')
