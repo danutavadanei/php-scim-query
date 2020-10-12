@@ -331,6 +331,58 @@ class Builder
     }
 
     /**
+     * Add a "where greater than or equal to" clause to the query.
+     *
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param string $logical
+     * @param bool $not
+     * @return $this
+     */
+    public function whereGreaterThanOrEqualTo($attribute, $value, string $logical = 'and', bool $not = false)
+    {
+        return $this->where($attribute, 'ge', $value, $logical, $not);
+    }
+
+    /**
+     * Add a "or where greater than or equal to" clause to the query.
+     *
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param bool $not
+     * @return $this
+     */
+    public function orWhereGreaterThanOrEqualTo($attribute, $value, bool $not = false)
+    {
+        return $this->whereGreaterThanOrEqualTo($attribute, $value, 'or', $not);
+    }
+
+    /**
+     * Add a "where not greater than or equal to" clause to the query.
+     *
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param string $logical
+     * @return $this
+     */
+    public function whereNotGreaterThanOrEqualTo($attribute, $value, string $logical = 'and')
+    {
+        return $this->where($attribute, 'ge', $value, $logical, true);
+    }
+
+    /**
+     * Add a "or where not greater than or equal to" clause to the query.
+     *
+     * @param mixed $attribute
+     * @param mixed $value
+     * @return $this
+     */
+    public function orWhereNotGreaterThanOrEqualTo($attribute, $value)
+    {
+        return $this->whereNotGreaterThanOrEqualTo($attribute, $value, 'or');
+    }
+
+    /**
      * Add a "where in" clause to the query.
      *
      * @param string $attribute
