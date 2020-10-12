@@ -101,7 +101,7 @@ class Grammar
     {
         $logical = $where['not'] ? 'and' : 'or';
 
-        $builder = new Builder($this);
+        $builder = $query->newQuery();
 
         foreach ($where['values'] as $value) {
             $builder->where($where['attribute'], 'eq', $value, $logical);
