@@ -124,6 +124,42 @@ class BuilderTest extends TestCase
         $this->assertSame('not (name sw "John") or not (name sw "Jane")', $builder->toScim());
     }
 
+    public function testWhereEndsWith()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereEndsWith('name', 'John');
+        $this->assertSame('name ew "John"', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder->whereEndsWith('name', 'John')->whereEndsWith('name', 'Jane');
+        $this->assertSame('name ew "John" and name ew "Jane"', $builder->toScim());
+    }
+
+    public function testWhereNotEndsWith()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereNotEndsWith('name', 'John');
+        $this->assertSame('not (name ew "John")', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder->whereNotEndsWith('name', 'John')->whereNotEndsWith('name', 'Jane');
+        $this->assertSame('not (name ew "John") and not (name ew "Jane")', $builder->toScim());
+    }
+
+    public function testOrWhereEndsWith()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereEndsWith('name', 'John')->orWhereEndsWith('name', 'Jane');
+        $this->assertSame('name ew "John" or name ew "Jane"', $builder->toScim());
+    }
+
+    public function testOrWhereNotEndsWith()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereNotEndsWith('name', 'John')->orWhereNotEndsWith('name', 'Jane');
+        $this->assertSame('not (name ew "John") or not (name ew "Jane")', $builder->toScim());
+    }
+
     public function testWherePresent()
     {
         $builder = $this->getBuilder();

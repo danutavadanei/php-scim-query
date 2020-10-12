@@ -227,6 +227,58 @@ class Builder
     }
 
     /**
+     * Add a "where ends with" clause to the query.
+     *
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param string $logical
+     * @param bool $not
+     * @return $this
+     */
+    public function whereEndsWith($attribute, $value, string $logical = 'and', bool $not = false)
+    {
+        return $this->where($attribute, 'ew', $value, $logical, $not);
+    }
+
+    /**
+     * Add a "or where ends with" clause to the query.
+     *
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param bool $not
+     * @return $this
+     */
+    public function orWhereEndsWith($attribute, $value, bool $not = false)
+    {
+        return $this->whereEndsWith($attribute, $value, 'or', $not);
+    }
+
+    /**
+     * Add a "where not ends with" clause to the query.
+     *
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param string $logical
+     * @return $this
+     */
+    public function whereNotEndsWith($attribute, $value, string $logical = 'and')
+    {
+        return $this->where($attribute, 'ew', $value, $logical, true);
+    }
+
+    /**
+     * Add a "or where not ends with" clause to the query.
+     *
+     * @param mixed $attribute
+     * @param mixed $value
+     * @return $this
+     */
+    public function orWhereNotEndsWith($attribute, $value)
+    {
+        return $this->whereNotEndsWith($attribute, $value, 'or');
+    }
+
+    /**
      * Add a "where in" clause to the query.
      *
      * @param string $attribute
