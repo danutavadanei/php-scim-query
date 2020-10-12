@@ -114,3 +114,8 @@ https://apidocs.pingidentity.com/pingdatagovernance/scim/v2/api/guide/
 ## To-do
 
 - add scim client abstraction and interface
+
+whereBetween
+whereDate
+whereDecimal
+whereComplex?
