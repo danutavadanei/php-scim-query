@@ -52,6 +52,42 @@ class BuilderTest extends TestCase
         $this->assertSame('not (name eq "John") or not (name eq "Jane")', $builder->toScim());
     }
 
+    public function testWhereContains()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereContains('name', 'John');
+        $this->assertSame('name co "John"', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder->whereContains('name', 'John')->whereContains('name', 'Jane');
+        $this->assertSame('name co "John" and name co "Jane"', $builder->toScim());
+    }
+
+    public function testWhereNotContains()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereNotContains('name', 'John');
+        $this->assertSame('not (name co "John")', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder->whereNotContains('name', 'John')->whereNotContains('name', 'Jane');
+        $this->assertSame('not (name co "John") and not (name co "Jane")', $builder->toScim());
+    }
+
+    public function testOrWhereContains()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereContains('name', 'John')->orWhereContains('name', 'Jane');
+        $this->assertSame('name co "John" or name co "Jane"', $builder->toScim());
+    }
+
+    public function testOrWhereNotContains()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereNotContains('name', 'John')->orWhereNotContains('name', 'Jane');
+        $this->assertSame('not (name co "John") or not (name co "Jane")', $builder->toScim());
+    }
+
     public function testWherePresent()
     {
         $builder = $this->getBuilder();

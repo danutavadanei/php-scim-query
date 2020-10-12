@@ -14,19 +14,16 @@ class Builder
     /**
      * @var array
      */
-    public $wheres = [];
+    public array $wheres = [];
 
     /**
      * @var string[]
      */
-    public $operators = [
+    public array $operators = [
         'eq', 'ne', 'co', 'sw', 'ew', 'pr' ,'gt', 'ge', 'lt', 'le',
     ];
 
-    /**
-     * @var \DanutAvadanei\ScimQuery\Grammar
-     */
-    public $grammar;
+    public Grammar $grammar;
 
     public function __construct(Grammar $grammar)
     {
@@ -90,8 +87,8 @@ class Builder
     /**
      * Add a "or where equals" clause to the query.
      *
-     * @param $attribute
-     * @param $value
+     * @param mixed $attribute
+     * @param mixed $value
      * @param bool $not
      * @return $this
      */
@@ -103,8 +100,8 @@ class Builder
     /**
      * Add a "where not equals" clause to the query.
      *
-     * @param $attribute
-     * @param $value
+     * @param mixed $attribute
+     * @param mixed $value
      * @param string $logical
      * @return $this
      */
@@ -116,13 +113,65 @@ class Builder
     /**
      * Add a "or where not equals" clause to the query.
      *
-     * @param $attribute
-     * @param $value
+     * @param mixed $attribute
+     * @param mixed $value
      * @return $this
      */
     public function orWhereNotEquals($attribute, $value)
     {
         return $this->whereNotEquals($attribute, $value, 'or');
+    }
+
+    /**
+     * Add a "where contains" clause to the query.
+     *
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param string $logical
+     * @param bool $not
+     * @return $this
+     */
+    public function whereContains($attribute, $value, string $logical = 'and', bool $not = false)
+    {
+        return $this->where($attribute, 'co', $value, $logical, $not);
+    }
+
+    /**
+     * Add a "or where contains" clause to the query.
+     *
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param bool $not
+     * @return $this
+     */
+    public function orWhereContains($attribute, $value, bool $not = false)
+    {
+        return $this->whereContains($attribute, $value, 'or', $not);
+    }
+
+    /**
+     * Add a "where not contains" clause to the query.
+     *
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param string $logical
+     * @return $this
+     */
+    public function whereNotContains($attribute, $value, string $logical = 'and')
+    {
+        return $this->where($attribute, 'co', $value, $logical, true);
+    }
+
+    /**
+     * Add a "or where not contains" clause to the query.
+     *
+     * @param mixed $attribute
+     * @param mixed $value
+     * @return $this
+     */
+    public function orWhereNotContains($attribute, $value)
+    {
+        return $this->whereNotContains($attribute, $value, 'or');
     }
 
     /**
