@@ -160,6 +160,42 @@ class BuilderTest extends TestCase
         $this->assertSame('not (name ew "John") or not (name ew "Jane")', $builder->toScim());
     }
 
+    public function testWhereGreaterThan()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereGreaterThan('name', 'John');
+        $this->assertSame('name gt "John"', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder->whereGreaterThan('name', 'John')->whereGreaterThan('name', 'Jane');
+        $this->assertSame('name gt "John" and name gt "Jane"', $builder->toScim());
+    }
+
+    public function testWhereNotGreaterThan()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereNotGreaterThan('name', 'John');
+        $this->assertSame('not (name gt "John")', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder->whereNotGreaterThan('name', 'John')->whereNotGreaterThan('name', 'Jane');
+        $this->assertSame('not (name gt "John") and not (name gt "Jane")', $builder->toScim());
+    }
+
+    public function testOrWhereGreaterThan()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereGreaterThan('name', 'John')->orWhereGreaterThan('name', 'Jane');
+        $this->assertSame('name gt "John" or name gt "Jane"', $builder->toScim());
+    }
+
+    public function testOrWhereNotGreaterThan()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereNotGreaterThan('name', 'John')->orWhereNotGreaterThan('name', 'Jane');
+        $this->assertSame('not (name gt "John") or not (name gt "Jane")', $builder->toScim());
+    }
+
     public function testWherePresent()
     {
         $builder = $this->getBuilder();
