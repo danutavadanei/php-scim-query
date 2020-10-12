@@ -52,8 +52,16 @@ class Builder
             func_num_args() === 2
         );
 
+        if ($attribute instanceof Closure && is_null($operator)) {
+            return $this->whereNested($attribute, $logical, $not);
+        }
+
         if ($this->invalidOperator($operator)) {
             [$value, $operator] = [$operator, 'eq'];
+        }
+
+        if (is_null($value)) {
+            return $this->whereNotPresent($attribute, $logical);
         }
 
         $type = 'Basic';
@@ -68,6 +76,65 @@ class Builder
         );
 
         return $this;
+    }
+
+    /**
+     * Add an "or where" clause to the query.
+     *
+     * @param \Closure|string|array $attribute
+     * @param mixed $operator
+     * @param mixed $value
+     * @param bool $not
+     * @return $this
+     */
+    public function orWhere($attribute, $operator = null, $value = null, bool $not = false)
+    {
+        [$value, $operator] = $this->prepareValueAndOperator(
+            $value,
+            $operator,
+            func_num_args() === 2
+        );
+
+        return $this->where($attribute, $operator, $value, 'or', $not);
+    }
+
+    /**
+     * Add an "where not" clause to the query.
+     *
+     * @param \Closure|string|array $attribute
+     * @param mixed $operator
+     * @param mixed $value
+     * @param string $logical
+     * @return $this
+     */
+    public function whereNot($attribute, $operator = null, $value = null, string $logical = 'and')
+    {
+        [$value, $operator] = $this->prepareValueAndOperator(
+            $value,
+            $operator,
+            func_num_args() === 2
+        );
+
+        return $this->where($attribute, $operator, $value, $logical, true);
+    }
+
+    /**
+     * Add an "or where not" clause to the query.
+     *
+     * @param \Closure|string|array $attribute
+     * @param mixed $operator
+     * @param mixed $value
+     * @return $this
+     */
+    public function orWhereNot($attribute, $operator = null, $value = null)
+    {
+        [$value, $operator] = $this->prepareValueAndOperator(
+            $value,
+            $operator,
+            func_num_args() === 2
+        );
+
+        return $this->where($attribute, $operator, $value, 'or', true);
     }
 
     /**
@@ -594,11 +661,6 @@ class Builder
         return $this->orWherePresent($attributes, true);
     }
 
-    public function whereNested(Closure $attribute, string $boolean)
-    {
-        return $this;
-    }
-
     public function whereComplex($attribute, $operator, Closure $value, string $boolean)
     {
         return $this;
@@ -608,7 +670,6 @@ class Builder
     {
         return $this;
     }
-
 
     /**
      * Prepare the value and operator for a where clause.
@@ -663,5 +724,93 @@ class Builder
     public function toScim()
     {
         return $this->grammar->compileWheres($this);
+    }
+
+    /**
+     * Add a nested where statement to the query.
+     *
+     * @param \Closure $callback
+     * @param string $boolean
+     * @param bool $not
+     * @return \DanutAvadanei\ScimQuery\Builder
+     */
+    public function whereNested(Closure $callback, string $boolean = 'and', bool $not = false)
+    {
+        call_user_func($callback, $query = $this->forNestedWhere());
+
+        return $this->addNestedWhereQuery($query, $boolean, $not);
+    }
+
+    /**
+     * Add a nested "or where" statement to the query.
+     *
+     * @param \Closure $callback
+     * @param bool $not
+     * @return \DanutAvadanei\ScimQuery\Builder
+     */
+    public function orWhereNested(Closure $callback, bool $not = false)
+    {
+        return $this->whereNested($callback, 'or', $not);
+    }
+
+    /**
+     * Add a nested "where not" statement to the query.
+     *
+     * @param \Closure $callback
+     * @param string $logical
+     * @return \DanutAvadanei\ScimQuery\Builder
+     */
+    public function whereNotNested(Closure $callback, string $logical = 'and')
+    {
+        return $this->whereNested($callback, $logical, true);
+    }
+
+    /**
+     * Add a nested "or where" statement to the query.
+     *
+     * @param \Closure $callback
+     * @return \DanutAvadanei\ScimQuery\Builder
+     */
+    public function orWhereNotNested(Closure $callback)
+    {
+        return $this->whereNested($callback, 'or', true);
+    }
+
+    /**
+     * Create a new query instance for nested where condition.
+     *
+     * @return \DanutAvadanei\ScimQuery\Builder
+     */
+    public function forNestedWhere()
+    {
+        return $this->newQuery();
+    }
+
+    /**
+     *
+     * @return \DanutAvadanei\ScimQuery\Builder
+     */
+    public function newQuery()
+    {
+        return new static($this->grammar);
+    }
+
+    /**
+     * Add another query builder as a nested where to the query builder.
+     *
+     * @param \DanutAvadanei\ScimQuery\Builder $query
+     * @param string $logical
+     * @param bool $not
+     * @return $this
+     */
+    public function addNestedWhereQuery(Builder $query, string $logical = 'and', bool $not = false)
+    {
+        if (count($query->wheres)) {
+            $type = 'Nested';
+
+            $this->wheres[] = compact('type', 'query', 'logical', 'not');
+        }
+
+        return $this;
     }
 }

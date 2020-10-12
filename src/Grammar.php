@@ -126,6 +126,22 @@ class Grammar
     }
 
     /**
+     * Compile a nested where clause.
+     *
+     * @param  \DanutAvadanei\ScimQuery\Builder $query
+     * @param  array  $where
+     * @return string
+     */
+    protected function whereNested(Builder $query, array $where): string
+    {
+        return $this->wrapExpression(
+            $this->compileWheres($where['query']),
+            $where['not'],
+            true
+        );
+    }
+
+    /**
      * Wrap a value in keyword identifiers.
      *
      * @param  \DanutAvadanei\ScimQuery\Expression|string  $value

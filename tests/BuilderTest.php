@@ -392,6 +392,112 @@ class BuilderTest extends TestCase
         $this->assertSame('name eq "John" or not (name eq "Joe" and name eq "Jane")', $builder->toScim());
     }
 
+    public function testWhereNested()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereNested(function (Builder $query) {
+            $query->whereEquals('name', 'Joe');
+        });
+        $this->assertSame('name eq "Joe"', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder
+            ->whereEquals('active', true)
+            ->whereNested(function (Builder $query) {
+                $query->whereEquals('name', 'Joe');
+            });
+        $this->assertSame('active eq true and (name eq "Joe")', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder->whereNested(function (Builder $query) {
+            $query->whereEquals('name', 'Joe')
+                ->whereEquals('name', 'Jane');
+        });
+        $this->assertSame('name eq "Joe" and name eq "Jane"', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder
+            ->whereEquals('active', true)
+            ->whereNested(function (Builder $query) {
+                $query->whereEquals('name', 'Joe')
+                    ->whereEquals('name', 'Jane');
+            });
+        $this->assertSame('active eq true and (name eq "Joe" and name eq "Jane")', $builder->toScim());
+    }
+
+    public function testWhereNotNested()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereNotNested(function (Builder $query) {
+            $query->whereEquals('name', 'Joe');
+        });
+        $this->assertSame('not (name eq "Joe")', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder
+            ->whereEquals('active', true)
+            ->whereNotNested(function (Builder $query) {
+                $query->whereEquals('name', 'Joe');
+            });
+        $this->assertSame('active eq true and not (name eq "Joe")', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder->whereNotNested(function (Builder $query) {
+            $query->whereEquals('name', 'Joe')
+                ->whereEquals('name', 'Jane');
+        });
+        $this->assertSame('not (name eq "Joe" and name eq "Jane")', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder
+            ->whereEquals('active', true)
+            ->whereNotNested(function (Builder $query) {
+                $query->whereEquals('name', 'Joe')
+                    ->whereEquals('name', 'Jane');
+            });
+        $this->assertSame('active eq true and not (name eq "Joe" and name eq "Jane")', $builder->toScim());
+    }
+
+    public function testOrWhereNested()
+    {
+        $builder = $this->getBuilder();
+        $builder
+            ->whereEquals('active', true)
+            ->orWhereNested(function (Builder $query) {
+                $query->whereEquals('name', 'Joe');
+            });
+        $this->assertSame('active eq true or (name eq "Joe")', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder
+            ->whereEquals('active', true)
+            ->orWhereNested(function (Builder $query) {
+                $query->whereEquals('name', 'Joe')
+                    ->whereEquals('name', 'Jane');
+            });
+        $this->assertSame('active eq true or (name eq "Joe" and name eq "Jane")', $builder->toScim());
+    }
+
+    public function testOrWhereNotNested()
+    {
+        $builder = $this->getBuilder();
+        $builder
+            ->whereEquals('active', true)
+            ->orWhereNotNested(function (Builder $query) {
+                $query->whereEquals('name', 'Joe');
+            });
+        $this->assertSame('active eq true or not (name eq "Joe")', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder
+            ->whereEquals('active', true)
+            ->orWhereNotNested(function (Builder $query) {
+                $query->whereEquals('name', 'Joe')
+                    ->whereEquals('name', 'Jane');
+            });
+        $this->assertSame('active eq true or not (name eq "Joe" and name eq "Jane")', $builder->toScim());
+    }
+
     /**
      * @return \DanutAvadanei\ScimQuery\Builder
      */
