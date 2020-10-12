@@ -76,12 +76,11 @@ class Builder
      * @param mixed $attribute
      * @param mixed $value
      * @param string $logical
-     * @param bool $not
      * @return $this
      */
-    public function whereEquals($attribute, $value, string $logical = 'and', bool $not = false)
+    public function whereEquals($attribute, $value, string $logical = 'and')
     {
-        return $this->where($attribute, 'eq', $value, $logical, $not);
+        return $this->where($attribute, 'eq', $value, $logical);
     }
 
     /**
@@ -89,12 +88,11 @@ class Builder
      *
      * @param mixed $attribute
      * @param mixed $value
-     * @param bool $not
      * @return $this
      */
-    public function orWhereEquals($attribute, $value, bool $not = false)
+    public function orWhereEquals($attribute, $value)
     {
-        return $this->whereEquals($attribute, $value, 'or', $not);
+        return $this->whereEquals($attribute, $value, 'or');
     }
 
     /**
@@ -107,7 +105,7 @@ class Builder
      */
     public function whereNotEquals($attribute, $value, string $logical = 'and')
     {
-        return $this->where($attribute, 'eq', $value, $logical, true);
+        return $this->where($attribute, 'ne', $value, $logical);
     }
 
     /**

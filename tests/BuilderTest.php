@@ -31,11 +31,11 @@ class BuilderTest extends TestCase
     {
         $builder = $this->getBuilder();
         $builder->whereNotEquals('name', 'John');
-        $this->assertSame('not (name eq "John")', $builder->toScim());
+        $this->assertSame('name ne "John"', $builder->toScim());
 
         $builder = $this->getBuilder();
         $builder->whereNotEquals('name', 'John')->whereNotEquals('name', 'Jane');
-        $this->assertSame('not (name eq "John") and not (name eq "Jane")', $builder->toScim());
+        $this->assertSame('name ne "John" and name ne "Jane"', $builder->toScim());
     }
 
     public function testOrWhereEquals()
@@ -49,7 +49,7 @@ class BuilderTest extends TestCase
     {
         $builder = $this->getBuilder();
         $builder->whereNotEquals('name', 'John')->orWhereNotEquals('name', 'Jane');
-        $this->assertSame('not (name eq "John") or not (name eq "Jane")', $builder->toScim());
+        $this->assertSame('name ne "John" or name ne "Jane"', $builder->toScim());
     }
 
     public function testWhereContains()
