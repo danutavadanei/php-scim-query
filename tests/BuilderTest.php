@@ -15,6 +15,14 @@ class BuilderTest extends TestCase
         $this->assertSame('name eq "John"', $builder->toScim());
 
         $builder = $this->getBuilder();
+        $builder->whereEquals('active', true)->whereEquals('external', false);
+        $this->assertSame('active eq true and external eq false', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder->whereEquals('age', 25);
+        $this->assertSame('age eq 25', $builder->toScim());
+
+        $builder = $this->getBuilder();
         $builder->whereEquals('name', 'John')->whereEquals('name', 'Jane');
         $this->assertSame('name eq "John" and name eq "Jane"', $builder->toScim());
     }
@@ -86,6 +94,50 @@ class BuilderTest extends TestCase
         $builder = $this->getBuilder();
         $builder->orWhereNotPresent(['type', 'activity']);
         $this->assertSame('not (type pr) or not (activity pr)', $builder->toScim());
+    }
+
+    public function testWhereIn()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereIn('name', ['Joe', 'Jane']);
+        $this->assertSame('name eq "Joe" or name eq "Jane"', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder->whereEquals('name', 'John')->whereIn('name', ['Joe', 'Jane']);
+        $this->assertSame('name eq "John" and (name eq "Joe" or name eq "Jane")', $builder->toScim());
+    }
+
+    public function testWhereNotIn()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereNotIn('name', ['Joe', 'Jane']);
+        $this->assertSame('not (name eq "Joe" and name eq "Jane")', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder->whereEquals('name', 'John')->whereNotIn('name', ['Joe', 'Jane']);
+        $this->assertSame('name eq "John" and not (name eq "Joe" and name eq "Jane")', $builder->toScim());
+    }
+
+    public function testOrWhereIn()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereEquals('active', 'true')->orWhereIn('name', ['Joe', 'Jane']);
+        $this->assertSame('active eq "true" or (name eq "Joe" or name eq "Jane")', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder->whereEquals('name', 'John')->orWhereIn('name', ['Joe', 'Jane']);
+        $this->assertSame('name eq "John" or (name eq "Joe" or name eq "Jane")', $builder->toScim());
+    }
+
+    public function testOrWhereNotIn()
+    {
+        $builder = $this->getBuilder();
+        $builder->whereEquals('active', true)->orWhereNotIn('name', ['Joe', 'Jane']);
+        $this->assertSame('active eq true or not (name eq "Joe" and name eq "Jane")', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder->whereEquals('name', 'John')->orWhereNotIn('name', ['Joe', 'Jane']);
+        $this->assertSame('name eq "John" or not (name eq "Joe" and name eq "Jane")', $builder->toScim());
     }
 
     /**

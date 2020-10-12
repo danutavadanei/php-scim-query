@@ -54,7 +54,7 @@ class Grammar
      */
     protected function concatenateWhereClauses(array $scim): string
     {
-        return $this->removeLeadingLogical(implode(' ', $scim));
+        return $this->trimRedundantParentheses($this->removeLeadingLogical(implode(' ', $scim)));
     }
 
     /**
@@ -97,6 +97,26 @@ class Grammar
      * @param  array  $where
      * @return string
      */
+    protected function whereIn(Builder $query, array $where): string
+    {
+        $logical = $where['not'] ? 'and' : 'or';
+
+        $builder = new Builder($this);
+
+        foreach ($where['values'] as $value) {
+            $builder->where($where['attribute'], 'eq', $value, $logical);
+        }
+
+        return $this->wrapExpression($builder->toScim(), $where['not'], true);
+    }
+
+    /**
+     * Compile a present where clause.
+     *
+     * @param  \DanutAvadanei\ScimQuery\Builder  $query
+     * @param  array  $where
+     * @return string
+     */
     protected function wherePresent(Builder $query, array $where): string
     {
         return $this->wrapExpression(
@@ -123,11 +143,15 @@ class Grammar
     /**
      * Wrap a single string in keyword identifiers.
      *
-     * @param  string  $value
+     * @param  mixed $value
      * @return string
      */
-    protected function wrapValue(string $value): string
+    protected function wrapValue($value): string
     {
+        if (is_bool($value) || is_numeric($value)) {
+            return var_export($value, true);
+        }
+
         return '"'.str_replace('"', '\"', $value).'"';
     }
 
@@ -164,12 +188,27 @@ class Grammar
         return preg_replace('/and |or /i', '', $value, 1);
     }
 
-    private function wrapExpression(string $string, bool $shouldWrap): string
+    /**
+     * Trim the redundant parentheses from a statement.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    protected function trimRedundantParentheses(string $value): string
     {
+        return preg_replace('/^\((.*)\)$/i', '$1', $value);
+    }
+
+    private function wrapExpression(string $string, bool $negation, bool $shouldWrap = false): string
+    {
+        if ($negation) {
+            return 'not ('.$string.')';
+        }
+
         if (! $shouldWrap) {
             return $string;
         }
 
-        return 'not ('.$string.')';
+        return '('.$string.')';
     }
 }

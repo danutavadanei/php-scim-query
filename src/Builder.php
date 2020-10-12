@@ -76,8 +76,8 @@ class Builder
     /**
      * Add a "where equals" clause to the query.
      *
-     * @param $attribute
-     * @param $value
+     * @param mixed $attribute
+     * @param mixed $value
      * @param string $logical
      * @param bool $not
      * @return $this
@@ -123,6 +123,62 @@ class Builder
     public function orWhereNotEquals($attribute, $value)
     {
         return $this->whereNotEquals($attribute, $value, 'or');
+    }
+
+    /**
+     * Add a "where in" clause to the query.
+     *
+     * @param string $attribute
+     * @param array $values
+     * @param string $logical
+     * @param bool $not
+     * @return $this
+     */
+    public function whereIn(string $attribute, array $values, string $logical = 'and', bool $not = false)
+    {
+        $type = 'In';
+
+        $this->wheres[] = compact('type', 'attribute', 'values', 'logical', 'not');
+
+        return $this;
+    }
+
+    /**
+     * Add a "or where in" clause to the query.
+     *
+     * @param string $attribute
+     * @param array $values
+     * @param bool $not
+     * @return $this
+     */
+    public function orWhereIn(string $attribute, array $values, bool $not = false)
+    {
+        return $this->whereIn($attribute, $values, 'or', $not);
+    }
+
+    /**
+     * Add a "where not in" clause to the query.
+     *
+     * @param string $attribute
+     * @param array $values
+     * @param string $logical
+     * @return $this
+     */
+    public function whereNotIn(string $attribute, array $values, string $logical = 'and')
+    {
+        return $this->whereIn($attribute, $values, $logical, true);
+    }
+
+    /**
+     * Add a "or where not in" clause to the query.
+     *
+     * @param string $attribute
+     * @param array $values
+     * @return $this
+     */
+    public function orWhereNotIn(string $attribute, array $values)
+    {
+        return $this->whereIn($attribute, $values, 'or', true);
     }
 
     /**
