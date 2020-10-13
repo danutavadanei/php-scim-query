@@ -344,6 +344,60 @@ class Builder
     }
 
     /**
+     * Add a "where present" clause to the query.
+     *
+     * @param string|array $attributes
+     * @param string $logical
+     * @param bool $not
+     * @return $this
+     */
+    public function wherePresent($attributes, string $logical = 'and', bool $not = false)
+    {
+        $type = 'Present';
+
+        foreach (Arr::wrap($attributes) as $attribute) {
+            $this->wheres[] = compact('type', 'attribute', 'logical', 'not');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add a "or where present" clause to the query.
+     *
+     * @param string|array $attributes
+     * @param bool $not
+     * @return $this
+     */
+    public function orWherePresent($attributes, bool $not = false)
+    {
+        return $this->wherePresent($attributes, 'or', $not);
+    }
+
+    /**
+     * Add a "not where present" clause to the query.
+     *
+     * @param string|array $attributes
+     * @param string $logical
+     * @return $this
+     */
+    public function whereNotPresent($attributes, string $logical = 'and')
+    {
+        return $this->wherePresent($attributes, $logical, true);
+    }
+
+    /**
+     * Add a "or where not present" clause to the query.
+     *
+     * @param string|array $attributes
+     * @return $this
+     */
+    public function orWhereNotPresent($attributes)
+    {
+        return $this->orWherePresent($attributes, true);
+    }
+
+    /**
      * Add a "where greater than" clause to the query.
      *
      * @param mixed $attribute
@@ -608,60 +662,6 @@ class Builder
     }
 
     /**
-     * Add a "where present" clause to the query.
-     *
-     * @param string|array $attributes
-     * @param string $logical
-     * @param bool $not
-     * @return $this
-     */
-    public function wherePresent($attributes, string $logical = 'and', bool $not = false)
-    {
-        $type = 'Present';
-
-        foreach (Arr::wrap($attributes) as $attribute) {
-            $this->wheres[] = compact('type', 'attribute', 'logical', 'not');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Add a "or where present" clause to the query.
-     *
-     * @param string|array $attributes
-     * @param bool $not
-     * @return $this
-     */
-    public function orWherePresent($attributes, bool $not = false)
-    {
-        return $this->wherePresent($attributes, 'or', $not);
-    }
-
-    /**
-     * Add a "not where present" clause to the query.
-     *
-     * @param string|array $attributes
-     * @param string $logical
-     * @return $this
-     */
-    public function whereNotPresent($attributes, string $logical = 'and')
-    {
-        return $this->wherePresent($attributes, $logical, true);
-    }
-
-    /**
-     * Add a "or where not present" clause to the query.
-     *
-     * @param string|array $attributes
-     * @return $this
-     */
-    public function orWhereNotPresent($attributes)
-    {
-        return $this->orWherePresent($attributes, true);
-    }
-
-    /**
      * Add a raw where clause to the query.
      *
      * @param string $scim
@@ -684,71 +684,6 @@ class Builder
     public function orWhereRaw(string $scim)
     {
         return $this->whereRaw($scim, 'or');
-    }
-
-    public function whereComplex($attribute, $operator, Closure $value, string $boolean)
-    {
-        return $this;
-    }
-
-    private function addArrayOfWheres($attribute, string $boolean, bool $not)
-    {
-        return $this;
-    }
-
-    /**
-     * Prepare the value and operator for a where clause.
-     *
-     * @param  string  $value
-     * @param  string  $operator
-     * @param  bool  $useDefault
-     * @return array
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function prepareValueAndOperator($value, $operator, $useDefault = false)
-    {
-        if ($useDefault) {
-            return [$operator, '='];
-        } elseif ($this->invalidOperatorAndValue($operator, $value)) {
-            throw new InvalidArgumentException('Illegal operator and value combination.');
-        }
-
-        return [$value, $operator];
-    }
-
-    /**
-     * Determine if the given operator and value combination is legal.
-     *
-     * Prevents using Null values with invalid operators.
-     *
-     * @param  string  $operator
-     * @param  mixed  $value
-     * @return bool
-     */
-    protected function invalidOperatorAndValue($operator, $value)
-    {
-        return is_null($value) && in_array($operator, $this->operators) &&
-            ! in_array($operator, ['pr']);
-    }
-
-    /**
-     * @param mixed $operator
-     * @return bool
-     */
-    public function invalidOperator($operator): bool
-    {
-        return ! in_array(strtolower($operator), $this->operators);
-    }
-
-    /**
-     * Get the SCIM representation of the query.
-     *
-     * @return string
-     */
-    public function toScim()
-    {
-        return $this->grammar->compileWheres($this);
     }
 
     /**
@@ -802,6 +737,73 @@ class Builder
     }
 
     /**
+     * Add an array of where clauses to the query.
+     *
+     * @param array $attribute
+     * @param string logical$
+     * @param bool $not
+     * @param string $method
+     * @return $this
+     */
+    private function addArrayOfWheres(array $attribute, string $logical, bool $not, string $method = 'where')
+    {
+        return $this->whereNested(function ($query) use ($attribute, $method, $logical) {
+            foreach ($attribute as $key => $value) {
+                if (is_numeric($key) && is_array($value)) {
+                    $query->{$method}(...array_values($value));
+                } else {
+                    $query->$method($key, 'eq', $value, $logical);
+                }
+            }
+        }, $logical, $not);
+    }
+
+    /**
+     * @param mixed $operator
+     * @return bool
+     */
+    public function invalidOperator($operator): bool
+    {
+        return ! in_array(strtolower($operator), $this->operators);
+    }
+
+    /**
+     * Determine if the given operator and value combination is legal.
+     *
+     * Prevents using Null values with invalid operators.
+     *
+     * @param  string  $operator
+     * @param  mixed  $value
+     * @return bool
+     */
+    protected function invalidOperatorAndValue(string $operator, $value): bool
+    {
+        return is_null($value) && in_array($operator, $this->operators) &&
+            ! in_array($operator, ['pr']);
+    }
+
+    /**
+     * Prepare the value and operator for a where clause.
+     *
+     * @param  mixed $value
+     * @param  string $operator
+     * @param  bool  $useDefault
+     * @return array
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function prepareValueAndOperator($value, string $operator, $useDefault = false): array
+    {
+        if ($useDefault) {
+            return [$operator, '='];
+        } elseif ($this->invalidOperatorAndValue($operator, $value)) {
+            throw new InvalidArgumentException('Illegal operator and value combination.');
+        }
+
+        return [$value, $operator];
+    }
+
+    /**
      * Create a new query instance for nested where condition.
      *
      * @return \DanutAvadanei\Scim2\Query\Builder
@@ -837,5 +839,15 @@ class Builder
         }
 
         return $this;
+    }
+
+    /**
+     * Get the SCIM representation of the query.
+     *
+     * @return string
+     */
+    public function toScim()
+    {
+        return $this->grammar->compileWheres($this);
     }
 }
