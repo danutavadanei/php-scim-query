@@ -107,7 +107,7 @@ class Grammar
             $builder->where($where['attribute'], 'eq', $value, $logical);
         }
 
-        return $this->wrapExpression($builder->toScim(), $where['not'], true);
+        return $this->wrapExpression($builder->toScimFilter(), $where['not'], true);
     }
 
     /**

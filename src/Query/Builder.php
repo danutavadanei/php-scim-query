@@ -3,13 +3,14 @@
 namespace DanutAvadanei\Scim2\Query;
 
 use Closure;
+use DanutAvadanei\Scim2\Concerns\BuildsQueries;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
 
 class Builder
 {
-    use Macroable;
+    use Macroable, BuildsQueries;
 
     /**
      * @var array
@@ -842,12 +843,22 @@ class Builder
     }
 
     /**
-     * Get the SCIM representation of the query.
+     * Get the scim2 filter representation of the query.
      *
      * @return string
      */
-    public function toScim()
+    public function toScimFilter()
     {
         return $this->grammar->compileWheres($this);
+    }
+
+    /**
+     * Get the scim2 query.
+     *
+     * @return \DanutAvadanei\Scim2\Query\Query
+     */
+    public function toScim(): Query
+    {
+        return new Query($this->toScimFilter());
     }
 }
