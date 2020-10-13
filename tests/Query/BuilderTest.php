@@ -512,6 +512,21 @@ class BuilderTest extends TestCase
         $this->assertSame('title pr or name eq "Joe"', $builder->toScim());
     }
 
+    public function testWhereWithArrayConditions()
+    {
+        $builder = $this->getBuilder();
+        $builder->where([['active', true], ['name', 'Joe']]);
+        $this->assertSame('active eq true and name eq "Joe"', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder->where(['active' => true, 'name' => 'Joe']);
+        $this->assertSame('active eq true and name eq "Joe"', $builder->toScim());
+
+        $builder = $this->getBuilder();
+        $builder->where([['active', true], ['name', 'Joe'], ['age', 'lt', 25]]);
+        $this->assertSame('active eq true and name eq "Joe" and age lt 25', $builder->toScim());
+    }
+
     /**
      * @return \DanutAvadanei\Scim2\Query\Builder
      */

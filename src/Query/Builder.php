@@ -786,16 +786,16 @@ class Builder
      * Prepare the value and operator for a where clause.
      *
      * @param  mixed $value
-     * @param  string $operator
+     * @param  mixed $operator
      * @param  bool  $useDefault
      * @return array
      *
      * @throws \InvalidArgumentException
      */
-    public function prepareValueAndOperator($value, string $operator, $useDefault = false): array
+    public function prepareValueAndOperator($value, $operator, $useDefault = false): array
     {
         if ($useDefault) {
-            return [$operator, '='];
+            return [$operator, 'eq'];
         } elseif ($this->invalidOperatorAndValue($operator, $value)) {
             throw new InvalidArgumentException('Illegal operator and value combination.');
         }
