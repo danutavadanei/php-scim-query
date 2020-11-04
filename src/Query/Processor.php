@@ -9,11 +9,10 @@ class Processor
     /**
      * Process the results of a "select" query.
      *
-     * @param \DanutAvadanei\Scim2\Query\Builder $query
      * @param array $results
      * @return \Illuminate\Support\Collection
      */
-    public function processSelect(Builder $query, array $results): Collection
+    public function processSelect(array $results): Collection
     {
         return new Collection($results);
     }

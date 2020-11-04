@@ -51,4 +51,16 @@ class PingDirectoryConnectionTest extends IntegrationTestCase
         $this->assertContains('DO5377', $uids);
         $this->assertContains('DP5851', $uids);
     }
+
+    public function testItCanPerformAQueryAndGetACursor()
+    {
+        $cursor = $this->connection->query()
+            ->whereEquals('extCompany', 'Connections Consult')
+            ->take(1000)
+            ->cursor();
+
+        $this->assertGreaterThan(100, $cursor->count());
+        
+        $this->assertNotNull($cursor->where('uid', ['CV2889'])->first());
+    }
 }

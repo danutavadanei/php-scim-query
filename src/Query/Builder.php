@@ -994,7 +994,7 @@ class Builder
     public function get($attributes = ['*'])
     {
         return collect($this->onceWithAttributes(Arr::wrap($attributes), function () {
-            return $this->processor->processSelect($this, $this->runSelect());
+            return $this->processor->processSelect($this->runSelect());
         }));
     }
 
