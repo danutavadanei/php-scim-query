@@ -10,17 +10,6 @@ use Generator;
 interface ConnectionInterface
 {
     /**
-     * Get a new raw query expression.
-     *
-     * @param string $filter
-     * @param array $attributes
-     * @param int $limit
-     * @param int $offset
-     * @return mixed
-     */
-    public function raw(string $filter, array $attributes = ['*'], int $limit = 100, int $offset = 0);
-
-    /**
      * Run a select statement against the scim2 provider.
      *
      * @param array $query
