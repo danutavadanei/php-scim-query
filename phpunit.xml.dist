@@ -25,6 +25,14 @@
             <clover outputFile="build/logs/clover.xml"/>
         </report>
     </coverage>
+    <php>
+        <php>
+            <env name="DRIVER_URL" value="https://pingid.com"/>
+            <env name="DRIVER_METHOD" value="POST"/>
+            <env name="USER" value="user"/>
+            <env name="PASSWORD" value="secret"/>
+        </php>
+    </php>
     <logging>
         <junit outputFile="build/report.junit.xml"/>
     </logging>

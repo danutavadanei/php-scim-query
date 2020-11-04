@@ -6,3 +6,4 @@ composer.lock
 coverage
 docs
 vendor
+phpunit.xml
