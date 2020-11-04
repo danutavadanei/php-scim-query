@@ -3,13 +3,13 @@
 namespace DanutAvadanei\Scim2;
 
 use Closure;
-use DanutAvadanei\Scim2\Query\Builder as QueryBuilder;
-use DanutAvadanei\Scim2\Query\Grammar as QueryGrammar;
-use DanutAvadanei\Scim2\Query\Processor;
 use Generator;
 use GuzzleHttp\Client;
-use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Support\Arr;
+use DanutAvadanei\Scim2\Query\Processor;
+use GuzzleHttp\Promise\PromiseInterface;
+use DanutAvadanei\Scim2\Query\Builder as QueryBuilder;
+use DanutAvadanei\Scim2\Query\Grammar as QueryGrammar;
 
 class Connection implements ConnectionInterface
 {
@@ -64,7 +64,7 @@ class Connection implements ConnectionInterface
      * @param \GuzzleHttp\Client $client
      * @param array $config
      */
-    public function __construct(Client $client, array $config)
+    public function __construct(Client $client, array $config = [])
     {
         $this->client = $client;
 
@@ -287,6 +287,26 @@ class Connection implements ConnectionInterface
     public function disableQueryLog(): void
     {
         $this->loggingQueries = false;
+    }
+
+    /**
+     * Get the connection query log.
+     *
+     * @return array
+     */
+    public function getQueryLog(): array
+    {
+        return $this->queryLog;
+    }
+
+    /**
+     * Clear the query log.
+     *
+     * @return void
+     */
+    public function flushQueryLog(): void
+    {
+        $this->queryLog = [];
     }
 
     /**

@@ -2,8 +2,9 @@
 
 namespace DanutAvadanei\Scim2\Tests\Query;
 
+use DanutAvadanei\Scim2\Connection;
 use DanutAvadanei\Scim2\Query\Builder;
-use DanutAvadanei\Scim2\Tests\Mocks\ConnectionMock;
+use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
 
 class BuilderTest extends TestCase
@@ -532,6 +533,6 @@ class BuilderTest extends TestCase
      */
     protected function getBuilder(): Builder
     {
-        return new Builder(new ConnectionMock());
+        return new Builder(new Connection(new Client()));
     }
 }
