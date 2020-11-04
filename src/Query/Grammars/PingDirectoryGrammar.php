@@ -15,10 +15,11 @@ class PingDirectoryGrammar extends Grammar
      */
     public function compile(Builder $query): array
     {
-        $compiled = parent::compile($query);
-
-        unset($compiled['offset']);
-
-        return array_merge($compiled, ['searchScope' => 'wholeSubtree']);
+        return [
+            'filter' => $this->compileWheres($query),
+            'includeAttributes' => $this->compileAttributes($query),
+            'limit' => $query->limit,
+            'searchScope' => 'wholeSubtree',
+        ];
     }
 }

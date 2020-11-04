@@ -18,7 +18,7 @@ class Grammar
     {
         return [
             'filter' => $this->compileWheres($query),
-            'includeAttributes' => $this->compileAttributes($query),
+            'attributes' => $this->compileAttributes($query),
             'limit' => $query->limit,
             'offset' => $query->offset,
         ];

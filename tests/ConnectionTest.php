@@ -62,7 +62,7 @@ class ConnectionTest extends TestCase
         $connection = $this->getMockConnection([], $client, $config);
 
         $results = $connection->select(['foo' => 'bar']);
-        $this->assertEquals($response, $results);
+        $this->assertEquals(null, $results);
         $log = $connection->getQueryLog();
         $this->assertSame(['foo' => 'bar'], $log[0]['query']);
         $this->assertIsNumeric($log[0]['time']);
@@ -87,7 +87,7 @@ class ConnectionTest extends TestCase
         $connection = $this->getMockConnection([], $client, $config);
 
         $results = $connection->select(['foo' => 'bar']);
-        $this->assertEquals($response, $results);
+        $this->assertEquals(null, $results);
         $log = $connection->getQueryLog();
         $this->assertSame(['foo' => 'bar'], $log[0]['query']);
         $this->assertIsNumeric($log[0]['time']);
