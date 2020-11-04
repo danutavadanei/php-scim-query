@@ -60,7 +60,7 @@ class PingDirectoryConnectionTest extends IntegrationTestCase
             ->cursor();
 
         $this->assertGreaterThan(100, $cursor->count());
-        
+
         $this->assertNotNull($cursor->where('uid', ['CV2889'])->first());
     }
 }
