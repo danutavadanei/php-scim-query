@@ -18,6 +18,14 @@ interface ConnectionInterface
     public function select(array $query);
 
     /**
+     * Run a select statement and return a single result.
+     *
+     * @param array $query
+     * @return mixed
+     */
+    public function selectOne(array $query);
+
+    /**
      * Run a select statement against the scim2 provider and returns a generator.
      *
      * @param array $query

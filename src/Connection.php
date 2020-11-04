@@ -97,6 +97,16 @@ class Connection implements ConnectionInterface
     /**
      * @inheritDoc
      */
+    public function selectOne(array $query)
+    {
+        $records = $this->select($query);
+
+        return array_shift($records);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function cursor(array $query): Generator
     {
         // TODO: Implement cursor() method.
