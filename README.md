@@ -1,4 +1,4 @@
-# An simple an elegant way to create SCIM 2.0 queries using PHP
+# A simple an elegant way to create SCIM 2.0 queries using PHP
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/danutavadanei/php-scim-query.svg?style=flat-square)](https://packagist.org/packages/danutavadanei/php-scim-query)
 [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/danutavadanei/php-scim-query/run-tests?label=tests)](https://github.com/danutavadanei/php-scim-query/actions?query=workflow%3Arun-tests+branch%3Amaster)
@@ -115,7 +115,3 @@ https://apidocs.pingidentity.com/pingdatagovernance/scim/v2/api/guide/
 
 - add scim client abstraction and interface
 
-whereBetween
-whereDate
-whereDecimal
-whereComplex?

@@ -3,7 +3,7 @@
 namespace DanutAvadanei\Scim2\Tests\Query;
 
 use DanutAvadanei\Scim2\Query\Builder;
-use DanutAvadanei\Scim2\Query\Grammar;
+use DanutAvadanei\Scim2\Tests\Mocks\ConnectionMock;
 use PHPUnit\Framework\TestCase;
 
 class BuilderTest extends TestCase
@@ -532,6 +532,6 @@ class BuilderTest extends TestCase
      */
     protected function getBuilder(): Builder
     {
-        return new Builder(new Grammar());
+        return new Builder(new ConnectionMock());
     }
 }

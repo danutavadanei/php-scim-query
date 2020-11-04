@@ -9,6 +9,33 @@ class Grammar
     use Macroable;
 
     /**
+     * Compile a query into a scim 2.0 filter object.
+     *
+     * @param \DanutAvadanei\Scim2\Query\Builder $query
+     * @return array
+     */
+    public function compile(Builder $query): array
+    {
+        return [
+            'filter' => $this->compileWheres($query),
+            'includeAttributes' => $this->compileAttributes($query),
+            'limit' => $query->limit ?: 100,
+            'offset' => $query->offset,
+        ];
+    }
+
+    /**
+     * Compile the "select attributes" portion of the query.
+     *
+     * @param \DanutAvadanei\Scim2\Query\Builder $query
+     * @return string
+     */
+    public function compileAttributes(Builder $query): string
+    {
+        return implode(',', $query->attributes ?: ['*']);
+    }
+
+    /**
      * Compile the "where" portions of the query.
      *
      * @param  \DanutAvadanei\Scim2\Query\Builder $query

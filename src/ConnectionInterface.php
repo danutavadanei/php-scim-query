@@ -3,8 +3,8 @@
 
 namespace DanutAvadanei\Scim2;
 
-
-use DanutAvadanei\Scim2\Query\Query;
+use DanutAvadanei\Scim2\Query\Grammar;
+use DanutAvadanei\Scim2\Query\Processor;
 use Generator;
 
 interface ConnectionInterface
@@ -12,34 +12,41 @@ interface ConnectionInterface
     /**
      * Get a new raw query expression.
      *
-     * @param $scim
+     * @param string $filter
      * @param array $attributes
      * @param int $limit
-     * @return \DanutAvadanei\Scim2\Query\Expression
-     */
-    public function raw($scim, array $attributes = ['*'], int $limit = -1);
-
-    /**
-     * Run a select statement and return a single result.
-     *
-     * @param \DanutAvadanei\Scim2\Query\Query $query
+     * @param int $offset
      * @return mixed
      */
-    public function selectOne(Query $query);
+    public function raw(string $filter, array $attributes = ['*'], int $limit = 100, int $offset = 0);
 
     /**
      * Run a select statement against the scim2 provider.
      *
-     * @param \DanutAvadanei\Scim2\Query\Query $query
+     * @param array $query
      * @return mixed
      */
-    public function select(Query $query);
+    public function select(array $query);
 
     /**
      * Run a select statement against the scim2 provider and returns a generator.
      *
-     * @param \DanutAvadanei\Scim2\Query\Query $query
+     * @param array $query
      * @return \Generator
      */
-    public function cursor(Query $query): Generator;
+    public function cursor(array $query): Generator;
+
+    /**
+     * Get the query grammar used by the connection.
+     *
+     * @return \DanutAvadanei\Scim2\Query\Grammar
+     */
+    public function getQueryGrammar(): Grammar;
+
+    /**
+     * Get the query post processor used by the connection.
+     *
+     * @return \DanutAvadanei\Scim2\Query\Processor
+     */
+    public function getPostProcessor(): Processor;
 }

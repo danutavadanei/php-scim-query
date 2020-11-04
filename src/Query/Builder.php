@@ -4,31 +4,89 @@ namespace DanutAvadanei\Scim2\Query;
 
 use Closure;
 use DanutAvadanei\Scim2\Concerns\BuildsQueries;
+use DanutAvadanei\Scim2\ConnectionInterface;
 use Illuminate\Support\Arr;
+use Illuminate\Support\LazyCollection;
+use Illuminate\Support\Traits\ForwardsCalls;
 use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
 
 class Builder
 {
-    use Macroable, BuildsQueries;
+    use ForwardsCalls, BuildsQueries, Macroable {
+        __call as macroCall;
+    }
 
     /**
+     * The data provider connection instance.
+     *
+     * @var \DanutAvadanei\Scim2\ConnectionInterface
+     */
+    public ConnectionInterface $connection;
+
+    /**
+     * The where constraints for the query.
+     *
      * @var array
      */
     public array $wheres = [];
 
     /**
+     * All of the available clause operators.
+     *
      * @var string[]
      */
     public array $operators = [
         'eq', 'ne', 'co', 'sw', 'ew', 'pr' ,'gt', 'ge', 'lt', 'le',
     ];
 
+    /**
+     * The attributes that should be returned.
+     *
+     * @var array
+     */
+    public array $attributes;
+
+    /**
+     * The scim query grammar instance.
+     *
+     * @var \DanutAvadanei\Scim2\Query\Grammar
+     */
     public Grammar $grammar;
 
-    public function __construct(Grammar $grammar)
+    /**
+     * The database query post processor instance.
+     *
+     * @var \DanutAvadanei\Scim2\Query\Processor
+     */
+    public Processor $processor;
+
+    /**
+     * The maximum number of records to return.
+     *
+     * @var int
+     */
+    public int $limit;
+
+    /**
+     * The number of records to skip.
+     *
+     * @var int
+     */
+    public int $offset = 0;
+
+    /**
+     * Create a new query builder instance.
+     *
+     * @param \DanutAvadanei\Scim2\ConnectionInterface $connection
+     * @param \DanutAvadanei\Scim2\Query\Grammar|null $grammar
+     * @param \DanutAvadanei\Scim2\Query\Processor|null $processor
+     */
+    public function __construct(ConnectionInterface $connection, Grammar $grammar = null, Processor $processor = null)
     {
-        $this->grammar = $grammar;
+        $this->connection = $connection;
+        $this->grammar = $grammar ?: $connection->getQueryGrammar();
+        $this->processor = $processor ?: $connection->getPostProcessor();
     }
 
     /**
@@ -820,7 +878,7 @@ class Builder
      */
     public function newQuery()
     {
-        return new static($this->grammar);
+        return new static($this->connection, $this->grammar);
     }
 
     /**
@@ -843,6 +901,138 @@ class Builder
     }
 
     /**
+     * Alias to set the "limit" value of the query.
+     *
+     * @param  int  $value
+     * @return $this
+     */
+    public function take(int $value): self
+    {
+        return $this->limit($value);
+    }
+
+    /**
+     * Set the "limit" value of the query.
+     *
+     * @param  int  $value
+     * @return $this
+     */
+    public function limit(int $value): self
+    {
+        if ($value >= 0) {
+            $this->limit = $value;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Alias to set the "offset" value of the query.
+     *
+     * @param  int  $value
+     * @return $this
+     */
+    public function skip(int $value): self
+    {
+        return $this->offset($value);
+    }
+
+    /**
+     * Set the "offset" value of the query.
+     *
+     * @param  int  $value
+     * @return $this
+     */
+    public function offset(int $value): self
+    {
+        $this->offset = max(0, $value);
+
+        return $this;
+    }
+
+    /**
+     * Execute a query for a single record by uid.
+     *
+     * @param  string $uid
+     * @param  array $columns
+     * @return mixed|static
+     */
+    public function find(string $uid, array $columns = ['*'])
+    {
+        return $this->where('uid', '=', $uid)->first($columns);
+    }
+
+    /**
+     * Execute the query and get the first result.
+     *
+     * @param  array|string  $columns
+     * @return object|static|null
+     */
+    public function first($columns = ['*'])
+    {
+        return $this->take(1)->get($columns)->first();
+    }
+
+    /**
+     * Get a lazy collection for the given query.
+     *
+     * @return \Illuminate\Support\LazyCollection
+     */
+    public function cursor()
+    {
+        return new LazyCollection(function () {
+            yield from $this->connection->cursor($this->toScim());
+        });
+    }
+
+    /**
+     * Execute the query as a "select" statement.
+     *
+     * @param  array|string  $columns
+     * @return \Illuminate\Support\Collection
+     */
+    public function get($columns = ['*'])
+    {
+        return collect($this->onceWithAttributes(Arr::wrap($columns), function () {
+            return $this->processor->processSelect($this, $this->runSelect());
+        }));
+    }
+
+    /**
+     * Run the query as a "select" statement against the connection.
+     *
+     * @return array
+     */
+    protected function runSelect()
+    {
+        return $this->connection->select($this->toScim());
+    }
+
+    /**
+     * Execute the given callback while selecting the given attributes.
+     *
+     * After running the callback, the attributes are reset to the original value.
+     *
+     * @param  array  $attributes
+     * @param  callable  $callback
+     * @return mixed
+     */
+    protected function onceWithAttributes(array $attributes, callable $callback)
+    {
+        $original = $this->attributes;
+
+        if (is_null($original)) {
+            $this->attributes = $attributes;
+        }
+
+        $result = $callback();
+
+        $this->attributes = $original;
+
+        return $result;
+    }
+
+    /**
      * Get the scim2 filter representation of the query.
      *
      * @return string
@@ -855,10 +1045,28 @@ class Builder
     /**
      * Get the scim2 query.
      *
-     * @return \DanutAvadanei\Scim2\Query\Query
+     * @return array
      */
-    public function toScim(): Query
+    public function toScim(): array
     {
-        return new Query($this->toScimFilter());
+        return $this->grammar->compile($this);
+    }
+
+    /**
+     * Handle dynamic method calls into the method.
+     *
+     * @param string $method
+     * @param array $parameters
+     * @return mixed
+     *
+     * @throws \BadMethodCallException
+     */
+    public function __call(string $method, array $parameters)
+    {
+        if (static::hasMacro($method)) {
+            return $this->macroCall($method, $parameters);
+        }
+
+        static::throwBadMethodCallException($method);
     }
 }
