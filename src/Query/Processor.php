@@ -2,6 +2,8 @@
 
 namespace DanutAvadanei\Scim2\Query;
 
+use Illuminate\Support\Collection;
+
 class Processor
 {
     /**
@@ -9,10 +11,10 @@ class Processor
      *
      * @param \DanutAvadanei\Scim2\Query\Builder $query
      * @param array $results
-     * @return array
+     * @return \Illuminate\Support\Collection
      */
-    public function processSelect(Builder $query, array $results): array
+    public function processSelect(Builder $query, array $results): Collection
     {
-        return $results;
+        return new Collection($results);
     }
 }

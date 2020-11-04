@@ -17,7 +17,9 @@
     "require": {
         "php": "^7.4",
         "guzzlehttp/guzzle": "^7.2",
-        "illuminate/support": "^8.9"
+        "illuminate/support": "^8.9",
+        "symfony/var-dumper": "^5.1",
+        "ext-json": "*"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.16",

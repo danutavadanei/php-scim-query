@@ -45,7 +45,7 @@ class Builder
      *
      * @var array
      */
-    public array $attributes;
+    public array $attributes = ['*'];
 
     /**
      * The scim query grammar instance.
@@ -66,7 +66,7 @@ class Builder
      *
      * @var int
      */
-    public int $limit;
+    public int $limit = 100;
 
     /**
      * The number of records to skip.
@@ -955,22 +955,22 @@ class Builder
      *
      * @param  string $uid
      * @param  array $columns
-     * @return mixed|static
+     * @return mixed|null
      */
     public function find(string $uid, array $columns = ['*'])
     {
-        return $this->where('uid', '=', $uid)->first($columns);
+        return $this->where('uid', 'eq', $uid)->first($columns);
     }
 
     /**
      * Execute the query and get the first result.
      *
-     * @param  array|string  $columns
-     * @return object|static|null
+     * @param  array|string  attributes$
+     * @return mixed|null
      */
-    public function first($columns = ['*'])
+    public function first($attributes = ['*'])
     {
-        return $this->take(1)->get($columns)->first();
+        return $this->take(1)->get($attributes)->first();
     }
 
     /**
@@ -988,12 +988,12 @@ class Builder
     /**
      * Execute the query as a "select" statement.
      *
-     * @param  array|string  $columns
+     * @param  array|string  $attributes
      * @return \Illuminate\Support\Collection
      */
-    public function get($columns = ['*'])
+    public function get($attributes = ['*'])
     {
-        return collect($this->onceWithAttributes(Arr::wrap($columns), function () {
+        return collect($this->onceWithAttributes(Arr::wrap($attributes), function () {
             return $this->processor->processSelect($this, $this->runSelect());
         }));
     }
@@ -1021,7 +1021,7 @@ class Builder
     {
         $original = $this->attributes;
 
-        if (is_null($original)) {
+        if ($original === ['*']) {
             $this->attributes = $attributes;
         }
 

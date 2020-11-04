@@ -27,10 +27,11 @@
     </coverage>
     <php>
         <php>
-            <env name="DRIVER_URL" value="https://pingid.com"/>
+            <env name="NAME" value=""/>
+            <env name="DRIVER_URL" value="https://api.directory.com/search"/>
             <env name="DRIVER_METHOD" value="POST"/>
-            <env name="USER" value="user"/>
-            <env name="PASSWORD" value="secret"/>
+            <env name="DRIVER_USER" value="user"/>
+            <env name="DRIVER_PASSWORD" value="secret"/>
         </php>
     </php>
     <logging>

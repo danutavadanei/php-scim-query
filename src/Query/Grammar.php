@@ -19,7 +19,7 @@ class Grammar
         return [
             'filter' => $this->compileWheres($query),
             'includeAttributes' => $this->compileAttributes($query),
-            'limit' => $query->limit ?: 100,
+            'limit' => $query->limit,
             'offset' => $query->offset,
         ];
     }
@@ -32,7 +32,7 @@ class Grammar
      */
     public function compileAttributes(Builder $query): string
     {
-        return implode(',', $query->attributes ?: ['*']);
+        return implode(',', $query->attributes);
     }
 
     /**

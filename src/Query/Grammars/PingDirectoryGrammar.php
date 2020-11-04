@@ -15,9 +15,10 @@ class PingDirectoryGrammar extends Grammar
      */
     public function compile(Builder $query): array
     {
-        return array_merge(
-            parent::compile($query),
-            ['excludeAttributes' => '']
-        );
+        $compiled = parent::compile($query);
+
+        unset($compiled['offset']);
+
+        return array_merge($compiled, ['searchScope' => 'wholeSubtree']);
     }
 }

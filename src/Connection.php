@@ -90,7 +90,10 @@ class Connection implements ConnectionInterface
 
             $promise = $this->execute($query);
 
-            return $promise->wait();
+            /** @var \GuzzleHttp\Psr7\Response $response */
+            $response = $promise->wait();
+
+            return json_decode($response->getBody(), true);
         });
     }
 
