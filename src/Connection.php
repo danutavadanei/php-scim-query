@@ -2,14 +2,15 @@
 
 namespace DanutAvadanei\Scim2;
 
+use BadMethodCallException;
 use Closure;
+use DanutAvadanei\Scim2\Query\Builder as QueryBuilder;
+use DanutAvadanei\Scim2\Query\Grammar as QueryGrammar;
+use DanutAvadanei\Scim2\Query\Processor;
+use DanutAvadanei\Scim2\Query\Statement;
 use Generator;
 use GuzzleHttp\Client;
 use Illuminate\Support\Arr;
-use DanutAvadanei\Scim2\Query\Processor;
-use GuzzleHttp\Promise\PromiseInterface;
-use DanutAvadanei\Scim2\Query\Builder as QueryBuilder;
-use DanutAvadanei\Scim2\Query\Grammar as QueryGrammar;
 
 class Connection implements ConnectionInterface
 {
@@ -18,7 +19,7 @@ class Connection implements ConnectionInterface
      *
      * @var \GuzzleHttp\Client
      */
-    protected Client $client;
+    public Client $client;
 
     /**
      * The query grammar implementation.
@@ -88,12 +89,11 @@ class Connection implements ConnectionInterface
                 return [];
             }
 
-            $promise = $this->execute($query);
+            $statement = $this->prepare($query);
 
-            /** @var \GuzzleHttp\Psr7\Response $response */
-            $response = $promise->wait();
+            $statement->execute();
 
-            return json_decode($response->getBody(), true);
+            return $statement->fetchAll();
         });
     }
 
@@ -112,7 +112,7 @@ class Connection implements ConnectionInterface
      */
     public function cursor(array $query): Generator
     {
-        // TODO: Implement cursor() method.
+        throw new BadMethodCallException('Cursor method not implemented in base connection');
     }
 
     /**
@@ -374,41 +374,13 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Execute a http query to the directory.
+     * Prepare a statement with given query.
      *
      * @param array $query
-     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @return \DanutAvadanei\Scim2\Query\Statement
      */
-    protected function execute(array $query): PromiseInterface
+    protected function prepare(array $query): Statement
     {
-        return $this->{'execute' . ucfirst($this->getDriverHttpMethod())}($query);
-    }
-
-    /**
-     * Execute a get http query to the directory.
-     *
-     * @param array $query
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    protected function executeGet(array $query): PromiseInterface
-    {
-        return $this->client->getAsync(
-            $this->getDriverSearchUrl(),
-            compact('query')
-        );
-    }
-
-    /**
-     * Execute a post http query to the directory.
-     *
-     * @param array $query
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    protected function executePost(array $query): PromiseInterface
-    {
-        return $this->client->postAsync(
-            $this->getDriverSearchUrl(),
-            ['json' => $query]
-        );
+        return new Statement($this, $query);
     }
 }
